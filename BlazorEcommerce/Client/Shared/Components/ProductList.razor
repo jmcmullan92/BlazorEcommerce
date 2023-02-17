@@ -1,0 +1,38 @@
+﻿@inject HttpClient Http
+
+<div>
+    <MudList>
+        @foreach (var product in Products)
+        {
+            <MudListItem>
+                <MudCard>
+                    <MudCardContent Class="media">
+                        <MudImage Src="@product.ImageUrl" Class="rounded-lg media-img" Alt="@product.Title" />
+
+                        <div class="media-body">
+                            <MudText Typo="Typo.h4">@product.Title</MudText>
+                            <MudDivider />
+                            <MudText Typo="Typo.subtitle1">@product.Description</MudText>
+                            <MudText Typo="Typo.h5" Class="price">£@product.Price</MudText>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudListItem>
+        }
+    </MudList>
+</div>
+
+
+@code {
+
+    private static List<Product> Products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Http.GetFromJsonAsync<List<Product>>("api/Product");
+
+        Products = result != null ? result : new List<Product>();
+
+    }
+
+}

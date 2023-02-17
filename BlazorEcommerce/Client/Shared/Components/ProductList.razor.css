@@ -1,0 +1,43 @@
+﻿
+::deep .media {
+    display: flex;
+    align-items: flex-start;
+}
+
+::deep .media-body {
+    flex: 1;
+    padding-left: 15px;
+}
+
+::deep .media-img {
+    max-height: 200px;
+    max-width: 200px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    transition: transform .2s;
+}
+
+    ::deep .media-img:hover {
+        transform: scale(1.1);
+    }
+
+::deep .media-img-wrapper {
+    width: 200px;
+    text-align: center;
+}
+
+::deep .price {
+    color: green !important;
+}
+
+@media(max-width: 1023.98px) {
+    ::deep .media {
+        flex-direction: column;
+    }
+
+    ::deep .media-img-wrapper {
+        width: 100%;
+        height: auto;
+    }
+}
+
