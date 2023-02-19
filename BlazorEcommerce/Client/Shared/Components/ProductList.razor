@@ -5,6 +5,8 @@
 @inject IProductService productService;
 @inject NavigationManager navigationManager;
 
+@implements IDisposable
+
 @if (productService.Products == null || productService.Products.Count == 0)
 {
     <LoadingSpinner Text="Loading product list" />
@@ -44,10 +46,15 @@ else
 
 @code {
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await productService.GetProducts();
+        productService.ProductsChanged += StateHasChanged;
 
+    }
+
+    public void Dispose()
+    {
+        productService.ProductsChanged -= StateHasChanged;
     }
 
     private void GoToProduct(int id)
