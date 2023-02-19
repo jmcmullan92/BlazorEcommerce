@@ -1,38 +1,58 @@
-﻿@inject HttpClient Http
+﻿@using BlazorEcommerce.Client.Shared.Components.Common
+@using BlazorEcommerce.Shared;
 
-<div>
-    <MudList>
-        @foreach (var product in Products)
-        {
-            <MudListItem>
-                <MudCard>
-                    <MudCardContent Class="media">
-                        <MudImage Src="@product.ImageUrl" Class="rounded-lg media-img" Alt="@product.Title" />
 
-                        <div class="media-body">
-                            <MudText Typo="Typo.h4">@product.Title</MudText>
-                            <MudDivider />
-                            <MudText Typo="Typo.subtitle1">@product.Description</MudText>
-                            <MudText Typo="Typo.h5" Class="price">£@product.Price</MudText>
-                        </div>
-                    </MudCardContent>
-                </MudCard>
-            </MudListItem>
-        }
-    </MudList>
-</div>
+@inject IProductService productService;
+@inject NavigationManager navigationManager;
+
+@if (productService.Products == null || productService.Products.Count == 0)
+{
+    <LoadingSpinner Text="Loading product list" />
+}
+else
+{
+    <div>
+        <MudList>
+            @foreach (var product in productService.Products)
+            {
+                string detailLink = $"/product/{product.Id}";
+
+                <MudListItem>
+                    <MudCard>
+                        <MudCardContent Class="media">
+                            <a href="@detailLink">
+                                <MudImage Src="@product.ImageUrl" Class="rounded-lg media-img" Alt="@product.Title" />
+                            </a>
+                            
+                            <div class="media-body">
+                                @*<MudLink OnClick="() => GoToProduct(product.Id)" Typo="Typo.h4">@product.Title</MudLink>*@
+                                <MudLink Href="@detailLink" Typo="Typo.h4">@product.Title</MudLink>
+                                <MudDivider Style="margin-bottom: 15px" />
+                                <MudText Typo="Typo.subtitle1">@product.Description</MudText>
+                                <MudText Typo="Typo.h5" Class="price">£@product.Price</MudText>
+                            </div>
+                        </MudCardContent>
+                    </MudCard>
+                </MudListItem>
+            }
+        </MudList>
+    </div>
+}
+
+
 
 
 @code {
 
-    private static List<Product> Products = new List<Product>();
-
     protected override async Task OnInitializedAsync()
     {
-        var result = await Http.GetFromJsonAsync<List<Product>>("api/Product");
+        await productService.GetProducts();
 
-        Products = result != null ? result : new List<Product>();
+    }
 
+    private void GoToProduct(int id)
+    {
+        navigationManager.NavigateTo($"/product/{id}");
     }
 
 }

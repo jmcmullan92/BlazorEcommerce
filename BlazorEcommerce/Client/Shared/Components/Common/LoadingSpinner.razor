@@ -1,0 +1,16 @@
+﻿
+
+<div class="spinner-container">
+    <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    <MudChip Variant="Variant.Text" Class="procolor">@Text</MudChip>
+</div>
+
+
+<link href="../Shared/Components/LoadingSpinner.razor.css" rel="stylesheet" type="text/css" />
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; }
+
+}
