@@ -1,0 +1,42 @@
+﻿::deep .media {
+    display: flex;
+    align-items: flex-start;
+}
+
+::deep .media-img{
+    max-height: 500px;
+    max-width: 500px;
+    border-radius: 6px;
+    margin: 0 10px 10px 10px;
+}
+
+::deep .media-img-wrapper {
+    max-width: 500px;
+    max-height: 500px;
+    text-align: center;
+}
+
+::deep .original-price {
+    text-decoration: line-through;
+}
+
+::deep .variant-select {
+    max-width: 200px;
+    margin-bottom: 15px
+}
+
+@media (max-width: 1023.98px) {
+    ::deep .media {
+        flex-direction: column;
+
+    }
+
+    ::deep .media-img {
+        max-width: 300px;
+    }
+
+    ::deep .media-img-weapper {
+        width: 100%;
+        height: auto
+    }
+}
