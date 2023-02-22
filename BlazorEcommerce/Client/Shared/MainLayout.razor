@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using BlazorEcommerce.Client.Shared.Components.Common
+
+@inherits LayoutComponentBase
 
 <MudThemeProvider IsDarkMode="true" />
 <MudDialogProvider />
@@ -10,6 +12,9 @@
     <MudAppBar Elevation="1">
         <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
         <MudSpacer />
+        <SearchBar />
+        <MudSpacer />
+        
         <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
     </MudAppBar>
@@ -22,6 +27,7 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
 
 
 @code {

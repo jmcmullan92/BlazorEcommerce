@@ -1,0 +1,98 @@
+﻿@inject NavigationManager navigationManager
+@inject IProductService productService
+
+
+
+<div class="product-search">
+    <MudInput @bind-Value="searchText"
+              @bind-Text="searchText"
+              Immediate="true"
+              @bind-Text:event="oninput"
+              @onkeyup="HandleSearch"
+              Class="nav-product-search"
+              Style="transform: scale(0.9); background-color: rgb(56,56,67); width: 400px;"
+              InputType="InputType.Search"
+              Placeholder="Search..."
+              Label="Search"
+              Variant="Variant.Outlined"
+              Adornment="Adornment.End"
+              AdornmentIcon="@Icons.Material.Filled.Search"
+              AdornmentColor="Color.Secondary"
+              @ref="searchInput" />
+    <MudPopover Open="@popOverIsOpen" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopCenter">
+        <MudList Clickable="true" Class="d-flex flex-column pa-1">
+            @foreach (var item in suggestions)
+            {
+                <MudListItem OnClick="() => SetSearchSuggestion(item)" Class="" Style="width: 275px;" Align="Align.Left">@item</MudListItem>
+            }
+        </MudList>
+    </MudPopover>
+    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="() => SearchProducts()">Search</MudButton>
+</div>
+
+<link href="~/../Shared/Components/Common/SearchBar.razor.css" rel="stylesheet" type="text/css" />
+
+
+@code {
+    private string searchText = string.Empty;
+    private List<string> suggestions = new List<string>();
+    protected MudInput<string> searchInput;
+    protected MudPopover popOver;
+    public bool popOverIsOpen = false;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await searchInput.FocusAsync();
+        }
+    }
+
+    public void SearchProducts()
+    {
+        suggestions = new List<string>();
+        popOverIsOpen = false;
+
+        if(searchText != string.Empty)
+        {
+            navigationManager.NavigateTo($"/search/{searchText}");
+        }
+        
+    }
+
+    public void SetSearchSuggestion(string suggestion)
+    {
+        searchText = suggestion;
+       
+        SearchProducts();
+    }
+
+    public async Task HandleSearch(KeyboardEventArgs args)
+    {
+        if(args.Key == null || args.Key.Equals("Enter"))
+        {
+            SearchProducts();
+        }
+        else if(searchText.Length > 1)
+        {
+            suggestions = await productService.GetProductSearchSuggestions(searchText);
+
+            if(suggestions.Count > 0)
+            {
+                popOverIsOpen = true;
+            }
+            else
+            {
+                popOverIsOpen = false;
+            }
+
+
+        }
+        else if(searchText.Length == 0)
+        {
+            suggestions = new List<string>();
+            popOverIsOpen = false;
+        }
+    }
+}
