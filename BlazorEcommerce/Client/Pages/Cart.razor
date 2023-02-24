@@ -32,19 +32,13 @@ else
 
                                     <MudNumericField 
                                         Label="Quantity"
-                                            @ref="quantityField"
                                             Immediate="true"
                                         Variant="Variant.Text" 
                                         Min="1" 
                                         Max="10"
-                                        T="int"
-                                        ValueChanged="() => UpdateQuantity(product)"
-                                         />
+                                        T="int" Text="@product.Quantity.ToString()"
+                                        ValueChanged="@((value) => UpdateQuantity(value, product))"/>
 
-                                    @*<MudNumericField Label="Quantity" Immediate="true"
-                                        Min="1"
-                                        Value="@product.Quantity"
-                                        ValueChanged="((ChangeEventArgs e) => UpdateQuantity(e, product))" />*@
                                 </MudItem>
                                 <MudItem xs="2">
                                     <MudText Typo="Typo.h5">£@(product.Price * product.Quantity)</MudText>
@@ -96,7 +90,6 @@ else
 }
 
 @code {
-    MudNumericField<int> quantityField;
 
     List<CartProductResponse> cartProducts = null;
     string message = "Loading cart...";
@@ -127,9 +120,9 @@ else
         }
     }
 
-    private async Task UpdateQuantity(CartProductResponse product)
+    private async Task UpdateQuantity(int value, CartProductResponse product)
     {
-        product.Quantity = quantityField.Value;
+        product.Quantity = value;
 
         if(product.Quantity < 1)
         {
