@@ -2,20 +2,20 @@
 @using BlazorEcommerce.Shared;
 
 
-@inject IProductService productService;
+@inject IProductStore productStore;
 @inject NavigationManager navigationManager;
 
 @implements IDisposable
 
-@if (productService.Products == null || productService.Products.Count == 0)
+@if (productStore.Products == null || productStore.Products.Count == 0)
 {
-    <LoadingSpinner Text="@productService.Message" />
+    <LoadingSpinner Text="@productStore.Message" />
 }
 else
 {
     <div>
         <MudList>
-            @foreach (var product in productService.Products)
+            @foreach (var product in productStore.Products)
             {
                 string detailLink = $"/product/{product.Id}";
 
@@ -38,21 +38,29 @@ else
                 </MudListItem>
             }
         </MudList>
+        <MudPagination Color="Color.Primary" @ref="selectedPage" Count="@productStore.PageCount" SelectedChanged="() => OnPaginationSelectionChanged()" />
     </div>
 }
 
 
 @code {
+    MudPagination selectedPage;
+
+    public void OnPaginationSelectionChanged()
+    {
+        var pageNo = selectedPage.Selected;
+        navigationManager.NavigateTo($"/search/{productStore.LastSearchText}/{pageNo}");
+    }
 
     protected override void OnInitialized()
     {
-        productService.ProductsChanged += StateHasChanged;
+        productStore.ProductsChanged += StateHasChanged;
 
     }
 
     public void Dispose()
     {
-        productService.ProductsChanged -= StateHasChanged;
+        productStore.ProductsChanged -= StateHasChanged;
     }
 
     private void GoToProduct(int id)

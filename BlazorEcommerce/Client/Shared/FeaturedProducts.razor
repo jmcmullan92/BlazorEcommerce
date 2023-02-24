@@ -1,0 +1,55 @@
+﻿@using BlazorEcommerce.Client.Shared.Components
+@using BlazorEcommerce.Client.Shared.Components.Common
+
+@inject IProductStore productStore
+@implements IDisposable
+
+@if(productStore.Products == null || productStore.Products.Count == 0)
+{
+    <LoadingSpinner Text="@productStore.Message" />
+}
+else
+{
+    <MudGrid Style="margin-top: 20px;">
+        <MudItem xs="4">
+
+        </MudItem>
+        <MudItem xs="4">
+            <MudCarousel Style="height:300px; width:700px" ShowArrows="true" ShowBullets="true" AutoCycle="false" TData="object">
+                @foreach (var product in productStore.Products)
+                {
+                    @if (product.Featured)
+                    {
+                        <MudCarouselItem Transition="Transition.Slide">
+                            <div class="d-flex" style="height:100%">
+                                <FeaturedProductCard Product="product" />
+                            </div>
+                        </MudCarouselItem>
+                    }
+
+                }
+
+            </MudCarousel>
+        </MudItem>
+        <MudItem xs="4">
+
+        </MudItem>
+    </MudGrid>
+    
+}
+
+
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        productStore.ProductsChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        productStore.ProductsChanged -= StateHasChanged;
+    }
+}

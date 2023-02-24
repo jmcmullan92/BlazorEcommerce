@@ -1,9 +1,9 @@
 ﻿using BlazorEcommerce.Shared;
 using BlazorEcommerce.Shared.Models;
 
-namespace BlazorEcommerce.Client.Services.ProductService
+namespace BlazorEcommerce.Client.Stores.Interfaces
 {
-    public interface IProductService
+    public interface IProductStore
     {
 
         event Action ProductsChanged;
@@ -14,11 +14,17 @@ namespace BlazorEcommerce.Client.Services.ProductService
 
         string Message { get; set; }
 
+        int CurrentPage { get; set; }
+
+        int PageCount { get; set; }
+
+        string LastSearchText { get; set; }
+
         Task GetProducts(string? categoryUrl = null);
 
         Task<ServiceResponse<Product>> GetProductById(int id);
 
-        Task SearchProducts(string searchText);
+        Task SearchProducts(string searchText, int page);
 
         Task<List<string>> GetProductSearchSuggestions(string searchText);
     }

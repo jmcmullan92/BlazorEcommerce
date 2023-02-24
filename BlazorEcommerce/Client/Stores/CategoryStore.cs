@@ -1,16 +1,17 @@
-﻿using BlazorEcommerce.Shared;
+﻿using BlazorEcommerce.Client.Stores.Interfaces;
+using BlazorEcommerce.Shared;
 using BlazorEcommerce.Shared.Models;
 using System.Net.Http.Json;
 
-namespace BlazorEcommerce.Client.Services.CategoryService
+namespace BlazorEcommerce.Client.Stores
 {
-    public class CategoryService : ICategoryService
+    public class CategoryStore : ICategoryStore
     {
         private readonly HttpClient _http;
 
         public List<Category> Categories { get; set; }
 
-        public CategoryService(HttpClient http)
+        public CategoryStore(HttpClient http)
         {
             _http = http;
         }
@@ -19,11 +20,11 @@ namespace BlazorEcommerce.Client.Services.CategoryService
         {
             var response = await _http.GetFromJsonAsync<ServiceResponse<List<Category>>>("api/category");
 
-            if(response != null && response.Data != null)
+            if (response != null && response.Data != null)
             {
                 Categories = response.Data;
             }
-            
+
         }
     }
 }

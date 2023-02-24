@@ -1,5 +1,5 @@
 ﻿@inject NavigationManager navigationManager
-@inject IProductService productService
+@inject IProductStore productStore
 
 
 
@@ -56,7 +56,7 @@
 
         if(searchText != string.Empty)
         {
-            navigationManager.NavigateTo($"/search/{searchText}");
+            navigationManager.NavigateTo($"/search/{searchText}/1");
         }
         
     }
@@ -76,7 +76,7 @@
         }
         else if(searchText.Length > 1)
         {
-            suggestions = await productService.GetProductSearchSuggestions(searchText);
+            suggestions = await productStore.GetProductSearchSuggestions(searchText);
 
             if(suggestions.Count > 0)
             {

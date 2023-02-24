@@ -12,24 +12,16 @@
     <MudAppBar Elevation="1">
         <MudText Typo="Typo.h5" Class="ml-3">Blazor Shop</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Home" Color="Color.Inherit" Size="Size.Large">Home</MudButton>
-        <MudSpacer />
-        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Movie" Color="Color.Inherit" Size="Size.Large">Movies</MudButton>
-
-        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Book" Color="Color.Inherit" Size="Size.Large">Books</MudButton>
-
-        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.VideogameAsset" Color="Color.Inherit" Size="Size.Large">Video Games</MudButton>
-        <MudSpacer />
         <SearchBar />
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Tertiary" aria-label="Cart" Size="Size.Large"></MudIconButton>
         <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Tertiary" aria-label="Cart" Size="Size.Large"></MudIconButton>
     </MudAppBar>
-    @*<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Variant="@DrawerVariant.Persistent" Elevation="2">
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Variant="@DrawerVariant.Persistent" Elevation="2">
         <MyNavMenu />
-    </MudDrawer>*@
+    </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="display: flex;">
             @Body
         </MudContainer>
     </MudMainContent>

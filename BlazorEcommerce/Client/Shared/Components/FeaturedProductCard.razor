@@ -1,0 +1,17 @@
+﻿
+<MudCard Style="display: flex;">
+    <MudImage Src="@Product.ImageUrl" Class="rounded-lg media-img" Alt="@Product.Title" />
+    <MudCardContent Style="flex: 1;padding-left: 15px;" >
+            <MudText Typo="Typo.h5">@Product.Title</MudText>
+            <MudText Typo="Typo.body2">@Product.Description</MudText>
+            <MudText Typo="Typo.h6">£@Product.Variants[0].Price</MudText>
+      
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    [Parameter]
+    public Product Product { get; set; }
+
+}

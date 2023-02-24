@@ -2,7 +2,7 @@
 
 @using BlazorEcommerce.Client.Shared.Components.Common
 
-@inject IProductService productService
+@inject IProductStore productStore
 
 @if (product == null)
 {
@@ -73,7 +73,7 @@ else
 
         message = "Loading product";
 
-        var result = await productService.GetProductById(Id);
+        var result = await productStore.GetProductById(Id);
 
         if (!result.Success)
         {

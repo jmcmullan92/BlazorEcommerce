@@ -1,11 +1,11 @@
-﻿@inject ICategoryService categoryService
+﻿@inject ICategoryStore categoryStore
 
 <MudNavMenu Class="mud-width-full">
     <MudNavLink Match="NavLinkMatch.All" Href="/" Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Info">Home</MudNavLink>
     
-    @if(categoryService.Categories != null && categoryService.Categories.Count > 0)
+    @if (categoryStore.Categories != null && categoryStore.Categories.Count > 0)
     {
-        @foreach (var category in categoryService.Categories)
+        @foreach (var category in categoryStore.Categories)
         {
             <MudNavLink Match="NavLinkMatch.All" Href="@category.Url" IconColor="Color.Info">@category.Name</MudNavLink>
         }
@@ -17,6 +17,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await categoryService.GetCategories();
+        await categoryStore.GetCategories();
     }
 }

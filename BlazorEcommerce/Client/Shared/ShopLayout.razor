@@ -1,0 +1,27 @@
+﻿@using BlazorEcommerce.Client.Shared.Components.Common
+
+@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="true" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+
+
+<MudLayout>
+    
+    <ShopNavMenu />
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+
+
+@code {
+
+    bool _drawerOpen = true;
+
+}

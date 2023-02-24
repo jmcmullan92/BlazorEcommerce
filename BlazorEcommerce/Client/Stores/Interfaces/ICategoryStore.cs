@@ -1,8 +1,8 @@
 ﻿using BlazorEcommerce.Shared.Models;
 
-namespace BlazorEcommerce.Client.Services.CategoryService
+namespace BlazorEcommerce.Client.Stores.Interfaces
 {
-    public interface ICategoryService
+    public interface ICategoryStore
     {
         List<Category> Categories { get; set; }
 
