@@ -22,6 +22,7 @@ namespace BlazorEcommerce.Client
 
             builder.Services.AddScoped<IProductStore, ProductStore>();
             builder.Services.AddScoped<ICategoryStore, CategoryStore>();
+            builder.Services.AddScoped<ICartStore, CartStore>();
 
 
             await builder.Build().RunAsync();

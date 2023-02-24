@@ -1,9 +1,10 @@
 ﻿using BlazorEcommerce.Server.Data;
+using BlazorEcommerce.Server.Services.Interfaces;
 using BlazorEcommerce.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 
-namespace BlazorEcommerce.Server.Services.ProductService
+namespace BlazorEcommerce.Server.Services
 {
     public class ProductService : IProductService
     {
@@ -98,14 +99,14 @@ namespace BlazorEcommerce.Server.Services.ProductService
 
             List<string> result = new List<string>();
 
-            foreach(var product in products)
+            foreach (var product in products)
             {
-                if(product.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                if (product.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
                 {
                     result.Add(product.Title);
                 }
 
-                if(product.Description != null)
+                if (product.Description != null)
                 {
                     var punctuation = product.Description.Where(char.IsPunctuation)
                         .Distinct().ToArray();
@@ -113,9 +114,9 @@ namespace BlazorEcommerce.Server.Services.ProductService
                     var words = product.Description.Split()
                         .Select(s => s.Trim(punctuation));
 
-                    foreach(var word in words)
+                    foreach (var word in words)
                     {
-                        if(word.Contains(searchText, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
+                        if (word.Contains(searchText, StringComparison.OrdinalIgnoreCase) && !result.Contains(word))
                         {
                             result.Add(word);
                         }

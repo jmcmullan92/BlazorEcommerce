@@ -1,9 +1,27 @@
 ﻿
-<MudBadge Content="1" Color="Color.Secondary" Overlap="true" Bordered="true" Class="mx-6 my-4">
+@inject ICartStore cartStore
+@inject ISyncLocalStorageService localStorage
+
+@implements IDisposable
+
+<MudBadge Content="@GetCartItemsCount()" Color="Color.Secondary" Overlap="true" Bordered="true" Class="mx-6 my-4">
     <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Href="cart" Color="Color.Tertiary" aria-label="Cart" Size="Size.Medium"></MudIconButton>
 </MudBadge>
 
 
 @code {
 
+    private int GetCartItemsCount()
+    {
+        var cart = localStorage.GetItem<List<CartItem>>("cart");
+        return cart != null ? cart.Count : 0;
+
+    }
+
+    protected override void OnInitialized()
+    {
+        cartStore.OnChange += StateHasChanged;
+    }
+
+    public void Dispose() => cartStore.OnChange -= StateHasChanged;
 }

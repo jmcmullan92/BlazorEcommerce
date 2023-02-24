@@ -1,8 +1,9 @@
 ﻿using BlazorEcommerce.Server.Data;
+using BlazorEcommerce.Server.Services.Interfaces;
 using BlazorEcommerce.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorEcommerce.Server.Services.CategoryService
+namespace BlazorEcommerce.Server.Services
 {
     public class CategoryService : ICategoryService
     {

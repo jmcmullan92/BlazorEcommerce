@@ -1,4 +1,4 @@
-﻿using BlazorEcommerce.Server.Services.CategoryService;
+﻿using BlazorEcommerce.Server.Services.Interfaces;
 using BlazorEcommerce.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

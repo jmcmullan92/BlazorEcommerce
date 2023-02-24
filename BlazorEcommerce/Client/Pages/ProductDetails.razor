@@ -3,6 +3,7 @@
 @using BlazorEcommerce.Client.Shared.Components.Common
 
 @inject IProductStore productStore
+@inject ICartStore cartStore
 
 @if (product == null)
 {
@@ -24,7 +25,7 @@ else
                         <MudItem xs="6">
                             <MudText Typo="Typo.subtitle1">@product.Description</MudText>
                         </MudItem>
-                        <MudItem xs="6">
+                        <MudItem xs="1">
                             @if (product.Variants != null && product.Variants.Count > 1)
                             {
 
@@ -44,7 +45,11 @@ else
 
                                 }
                                 <MudText Typo="Typo.h4">£@GetSelectedVariant().Price</MudText>
+                                
                             }
+                        </MudItem>
+                        <MudItem xs="1">
+                            <MudFab Color="Color.Tertiary" OnClick="() => AddToCart()" StartIcon="@Icons.Material.Filled.ShoppingCart" DisableElevation="true" />
                         </MudItem>
                     </MudGrid>
 
@@ -95,6 +100,20 @@ else
     {
         var variant = product.Variants.FirstOrDefault(v => v.ProductTypeId == currentTypeId);
         return variant;
+    }
+
+    private async Task AddToCart()
+    {
+        var productVariant = GetSelectedVariant();
+
+        var cartItem = new CartItem
+        {
+            ProductId = productVariant.ProductId,
+            ProductTypeId = productVariant.ProductTypeId
+        };
+
+        await cartStore.AddToCart(cartItem);
+
     }
 
 
