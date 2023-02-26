@@ -1,4 +1,10 @@
 ﻿@page "/login"
+@using Microsoft.AspNetCore.WebUtilities;
+
+@inject IAuthStore authStore
+@inject ILocalStorageService localStorage
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager navMan
 
 <PageTitle>Login</PageTitle>
 
@@ -48,14 +54,40 @@
 @code {
     private UserLogin userLoginModel = new UserLogin();
 
+    private string returnUrl = string.Empty;
+
     bool showErrorAlert = false;
     bool showSuccessAlert = false;
 
     string alertMessage = string.Empty;
 
+    protected override void OnInitialized()
+    {
+        var uri = navMan.ToAbsoluteUri(navMan.Uri);
+        if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url))
+        {
+            returnUrl = url;
+        }
+    }
+
     private async Task HandleLogin()
     {
-        Console.WriteLine("Log me in");
+        var result = await authStore.Login(userLoginModel);
+
+        if(result.Success)
+        {
+            alertMessage = string.Empty;
+            showErrorAlert = false;
+
+            await localStorage.SetItemAsync("authToken", result.Data);
+            await authenticationStateProvider.GetAuthenticationStateAsync();
+            navMan.NavigateTo(returnUrl);
+        }
+        else
+        {
+            alertMessage = result.Message;
+            showErrorAlert = true;
+        }
     }
 
     private void CloseAlert(bool value)

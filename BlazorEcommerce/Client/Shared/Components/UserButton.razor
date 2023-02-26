@@ -1,16 +1,23 @@
 ﻿
 @inject NavigationManager navMan
+@inject ILocalStorageService localStorage
+@inject AuthenticationStateProvider authenticationStateProvider
 
 <div>
     <MudIconButton Icon="@Icons.Material.Filled.Person" @onfocusout="() => HideSubMenu()" Color="Color.Tertiary" aria-label="Cart" Size="Size.Large" OnClick="HandleUserButtonClick" @ref="userButton"></MudIconButton>
     <MudPopover Open="@subMenuIsOpen" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" @onfocusout="() => HideSubMenu()">
         <MudPaper Width="250px">
             <MudList Clickable="true">
-                <MudListItem Text="Log in" Icon="@Icons.Material.Filled.Login" OnClick="GoToLoginPage" />
-                <MudListItem Text="Register" Icon="@Icons.Material.Filled.AppRegistration" OnClick="GoToRegistrationPage" />
-
-
-                <MudListItem Text="Log out" Icon="@Icons.Material.Filled.Logout" />
+                <AuthorizeView>
+                    <Authorized>
+                        <MudListItem Text="Profile" Icon="@Icons.Material.Filled.SpaceDashboard" OnClick="GoToUserProfile" />
+                        <MudListItem Text="Log out" Icon="@Icons.Material.Filled.Logout" OnClick="Logout" />
+                    </Authorized>
+                    <NotAuthorized>
+                        <MudListItem Text="Log in" Icon="@Icons.Material.Filled.Login" OnClick="GoToLoginPage" />
+                        <MudListItem Text="Register" Icon="@Icons.Material.Filled.AppRegistration" OnClick="GoToRegistrationPage" />
+                    </NotAuthorized>
+                </AuthorizeView>
             </MudList>
         </MudPaper>
     </MudPopover>
@@ -30,7 +37,8 @@
 
     void GoToLoginPage()
     {
-        navMan.NavigateTo("/login");
+        var returnUrl = navMan.ToBaseRelativePath(navMan.Uri);
+        navMan.NavigateTo($"/login?returnUrl={returnUrl}");
         HideSubMenu();
     }
 
@@ -44,6 +52,18 @@
     {
         await Task.Delay(100);
         subMenuIsOpen = false;
+    }
+
+    private async Task Logout()
+    {
+        await localStorage.RemoveItemAsync("authToken");
+        await authenticationStateProvider.GetAuthenticationStateAsync();
+        navMan.NavigateTo("");
+    }
+
+    private void GoToUserProfile()
+    {
+        navMan.NavigateTo("/userprofile");
     }
 
 

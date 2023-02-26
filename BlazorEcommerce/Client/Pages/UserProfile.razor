@@ -1,0 +1,85 @@
+﻿@page "/userprofile"
+@using BlazorEcommerce.Shared;
+
+@inject IAuthStore authStore
+
+@attribute [Authorize]
+
+<AuthorizeView>
+    <h3>Hi! You're logged in as <i>@context.User.Identity.Name</i> </h3>
+</AuthorizeView>
+
+<h5>Change Password</h5>
+<EditForm Model="request" OnValidSubmit="ChangePassword">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField id="txtPassword"
+                                  Label="Password"
+                                  Class="mt-3"
+                                  @bind-Value="request.Password"
+                                  For="@(() => request.Password)"
+                                  InputType="InputType.Password" />
+                    <MudTextField id="txtConfirmPassword"
+                                  Label="Confirm Password"
+                                  Class="mt-3"
+                                  @bind-Value="request.ConfirmPassword"
+                                  For="@(() => request.ConfirmPassword)"
+                                  InputType="InputType.Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    @if (showErrorAlert)
+                    {
+                        <MudAlert Severity="Severity.Error"
+                              ShowCloseIcon="true"
+                              CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                    }
+                    @if (showSuccessAlert)
+                    {
+                        <MudAlert Severity="Severity.Success"
+                              ShowCloseIcon="true"
+                              CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                    }
+                    @if (!showErrorAlert && !showSuccessAlert)
+                    {
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
+                    }
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>
+
+@code {
+    UserChangePassword request = new UserChangePassword();
+
+
+    bool showErrorAlert = false;
+    bool showSuccessAlert = false;
+
+    string alertMessage = string.Empty;
+
+    private async Task ChangePassword()
+    {
+        var result = await authStore.ChangePassword(request);
+        alertMessage = result.Message;
+
+        if(result.Success)
+        {
+            showSuccessAlert = true;
+        }
+        else
+        {
+            showErrorAlert = true;
+        }
+    }
+
+    private void CloseAlert(bool value)
+    {
+        showErrorAlert = false;
+        showSuccessAlert = false;
+    }
+}
