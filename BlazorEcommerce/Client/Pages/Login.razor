@@ -1,0 +1,67 @@
+﻿@page "/login"
+
+<PageTitle>Login</PageTitle>
+
+<EditForm Model="userLoginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField id="txtEmail"
+                                  Label="Email"
+                                  Class="mt-3"
+                                  @bind-Value="userLoginModel.Email"
+                                  For="@(() => userLoginModel.Email)"
+                                  InputType="InputType.Email" />
+                    <MudTextField id="txtPassword"
+                                  Label="Password"
+                                  Class="mt-3"
+                                  @bind-Value="userLoginModel.Password"
+                                  For="@(() => userLoginModel.Password)"
+                                  InputType="InputType.Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    @if (showErrorAlert)
+                    {
+                        <MudAlert Severity="Severity.Error"
+                              ShowCloseIcon="true"
+                              CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                    }
+                    @if (showSuccessAlert)
+                    {
+                        <MudAlert Severity="Severity.Success"
+                              ShowCloseIcon="true"
+                              CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                    }
+                    @if (!showErrorAlert && !showSuccessAlert)
+                    {
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Log in</MudButton>
+                    }
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>
+
+@code {
+    private UserLogin userLoginModel = new UserLogin();
+
+    bool showErrorAlert = false;
+    bool showSuccessAlert = false;
+
+    string alertMessage = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        Console.WriteLine("Log me in");
+    }
+
+    private void CloseAlert(bool value)
+    {
+        showErrorAlert = false;
+        showSuccessAlert = false;
+    }
+
+}

@@ -1,0 +1,90 @@
+﻿@page "/register"
+
+@inject IAuthStore authStore
+
+<PageTitle>Register</PageTitle>
+<h3>Register</h3>
+
+<EditForm Model="userModel" OnValidSubmit="HandleRegistration">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField
+                        id="txtEmail"
+                        Label="Email" 
+                        Class="mt-3"
+                        @bind-Value="userModel.Email" 
+                        For="@(() => userModel.Email)"
+                        InputType="InputType.Email"/>
+                    <MudTextField 
+                        id="txtPassword"
+                        Label="Password"
+                        Class="mt-3"
+                        @bind-Value="userModel.Password" 
+                        For="@(() => userModel.Password)" 
+                        InputType="InputType.Password" />
+                    <MudTextField 
+                        id="txtConfirmPassword"
+                        Label="Confirm Password"
+                        Class="mt-3"
+                        @bind-Value="userModel.ConfirmPassword" 
+                        For="@(() => userModel.ConfirmPassword)" 
+                        InputType="InputType.Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    @if(showErrorAlert)
+                    {
+                        <MudAlert Severity="Severity.Error" 
+                            ShowCloseIcon="true"
+                            CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                    }
+                    @if (showSuccessAlert)
+                    {
+                        <MudAlert Severity="Severity.Success"
+                              ShowCloseIcon="true"
+                              CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                    }
+                    @if(!showErrorAlert && !showSuccessAlert)
+                    {
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                    }
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+</EditForm>
+
+@code {
+
+    UserRegister userModel = new UserRegister();
+
+    string alertMessage = string.Empty;
+    bool showErrorAlert = false;
+    bool showSuccessAlert = false;
+
+    private async Task HandleRegistration()
+    {
+        var result = await authStore.Register(userModel);
+
+        alertMessage = result.Message;
+
+        if(!result.Success)
+        {
+            showErrorAlert = true;
+        }
+        else
+        {
+            showSuccessAlert = true;
+        }
+
+    }
+
+    private void CloseAlert(bool value)
+    {
+        showErrorAlert = value;
+        showSuccessAlert = value;
+    }
+}

@@ -13,7 +13,7 @@
 else
 {
     <div>
-        @foreach(var product in cartProducts)
+        @foreach (var product in cartProducts)
         {
             string detailLink = $"/product/{product.ProductId}";
 
@@ -29,39 +29,33 @@ else
                                 <MudItem xs="9">
                                     <MudLink Href="@detailLink" Typo="Typo.h5">@product.Title</MudLink>
                                     <MudText Typo="Typo.h6">@product.ProductType</MudText>
-
-                                    <MudNumericField 
-                                        Label="Quantity"
-                                            Immediate="true"
-                                        Variant="Variant.Text" 
-                                        Min="1" 
-                                        Max="10"
-                                        T="int" Text="@product.Quantity.ToString()"
-                                        ValueChanged="@((value) => UpdateQuantity(value, product))"/>
-
+                                    <MudNumericField Label="Quantity"
+                                             Immediate="true"
+                                             Variant="Variant.Text"
+                                             Min="1"
+                                             Max="10"
+                                             T="int" Text="@product.Quantity.ToString()"
+                                             ValueChanged="@((value) => UpdateQuantity(value, product))" />
                                 </MudItem>
                                 <MudItem xs="2">
                                     <MudText Typo="Typo.h5">£@(product.Price * product.Quantity)</MudText>
-                                </MudItem>
-                                <MudItem xs="1">
-                                    <MudIconButton 
-                                        Icon="@Icons.Material.Filled.Delete" 
-                                        OnClick="() => RemoveProductFromCart(product.ProductId, product.ProductTypeId)" 
-                                        Variant="Variant.Filled" 
-                                        Color="Color.Error" 
-                                        Size="Size.Medium" />
-                                </MudItem>
-                                
-                            </MudGrid>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
-                <MudItem xs="3">
+                                    </MudItem>
+                                    <MudItem xs="1">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           OnClick="() => RemoveProductFromCart(product.ProductId, product.ProductTypeId)"
+                                           Variant="Variant.Filled"
+                                           Color="Color.Error"
+                                           Size="Size.Medium" />
+                                    </MudItem>
 
-                </MudItem>
-            </MudGrid>
+                                </MudGrid>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="3">
 
-            
+                    </MudItem>
+                </MudGrid>
         }
 
         <MudGrid>
@@ -81,11 +75,11 @@ else
                 <MudText Typo="Typo.h6">Total (@cartProducts.Count): £@cartProducts.Sum(product => product.Price * product.Quantity)</MudText>
             </MudItem>
             <MudItem xs="2">
-                
+
             </MudItem>
         </MudGrid>
 
-        
+
     </div>
 }
 

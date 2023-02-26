@@ -1,0 +1,50 @@
+﻿
+@inject NavigationManager navMan
+
+<div>
+    <MudIconButton Icon="@Icons.Material.Filled.Person" @onfocusout="() => HideSubMenu()" Color="Color.Tertiary" aria-label="Cart" Size="Size.Large" OnClick="HandleUserButtonClick" @ref="userButton"></MudIconButton>
+    <MudPopover Open="@subMenuIsOpen" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" @onfocusout="() => HideSubMenu()">
+        <MudPaper Width="250px">
+            <MudList Clickable="true">
+                <MudListItem Text="Log in" Icon="@Icons.Material.Filled.Login" OnClick="GoToLoginPage" />
+                <MudListItem Text="Register" Icon="@Icons.Material.Filled.AppRegistration" OnClick="GoToRegistrationPage" />
+
+
+                <MudListItem Text="Log out" Icon="@Icons.Material.Filled.Logout" />
+            </MudList>
+        </MudPaper>
+    </MudPopover>
+</div>
+
+
+@code {
+    public bool subMenuIsOpen = false;
+    MudIconButton userButton;
+
+    void HandleUserButtonClick()
+    {
+        subMenuIsOpen = !subMenuIsOpen;
+        //await userButton.FocusAsync();
+
+    }
+
+    void GoToLoginPage()
+    {
+        navMan.NavigateTo("/login");
+        HideSubMenu();
+    }
+
+    void GoToRegistrationPage()
+    {
+        navMan.NavigateTo("/register");
+        HideSubMenu();
+    }
+
+    private async Task HideSubMenu()
+    {
+        await Task.Delay(100);
+        subMenuIsOpen = false;
+    }
+
+
+}
