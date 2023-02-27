@@ -34,8 +34,9 @@ else
                                              Variant="Variant.Text"
                                              Min="1"
                                              Max="10"
-                                             T="int" Text="@product.Quantity.ToString()"
-                                             ValueChanged="@((value) => UpdateQuantity(value, product))" />
+                                             T="int"
+                                             Value="@product.Quantity"
+                                             ValueChanged="((val) => UpdateQuantity(val, product))" />
                                 </MudItem>
                                 <MudItem xs="2">
                                     <MudText Typo="Typo.h5">£@(product.Price * product.Quantity)</MudText>
@@ -88,6 +89,7 @@ else
     List<CartProductResponse> cartProducts = null;
     string message = "Loading cart...";
 
+
     protected override async Task OnInitializedAsync()
     {
         await LoadCart();
@@ -103,25 +105,20 @@ else
 
     private async Task LoadCart()
     {
-        if ((await cartStore.GetCartItems()).Count == 0)
+        await cartStore.GetCartItemsCount();
+        cartProducts = await cartStore.GetCartProducts();
+
+        if (cartProducts == null || cartProducts.Count == 0)
         {
             message = "Cart is empty";
-            cartProducts = new List<CartProductResponse>();
-        }
-        else
-        {
-            cartProducts = await cartStore.GetCartProducts();
         }
     }
 
-    private async Task UpdateQuantity(int value, CartProductResponse product)
+    private async Task UpdateQuantity(int e, CartProductResponse product)
     {
-        product.Quantity = value;
-
-        if(product.Quantity < 1)
-        {
+        product.Quantity = e;
+        if (product.Quantity < 1)
             product.Quantity = 1;
-        }
 
         await cartStore.UpdateQuantity(product);
     }

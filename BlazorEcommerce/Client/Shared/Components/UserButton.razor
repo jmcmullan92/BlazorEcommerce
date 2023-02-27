@@ -2,6 +2,7 @@
 @inject NavigationManager navMan
 @inject ILocalStorageService localStorage
 @inject AuthenticationStateProvider authenticationStateProvider
+@inject ICartStore cartStore
 
 <div>
     <MudIconButton Icon="@Icons.Material.Filled.Person" @onfocusout="() => HideSubMenu()" Color="Color.Tertiary" aria-label="Cart" Size="Size.Large" OnClick="HandleUserButtonClick" @ref="userButton"></MudIconButton>
@@ -57,6 +58,7 @@
     private async Task Logout()
     {
         await localStorage.RemoveItemAsync("authToken");
+        await cartStore.GetCartItemsCount();
         await authenticationStateProvider.GetAuthenticationStateAsync();
         navMan.NavigateTo("");
     }
