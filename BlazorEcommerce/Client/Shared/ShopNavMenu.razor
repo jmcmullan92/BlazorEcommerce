@@ -3,23 +3,34 @@
 
 @inject NavigationManager navMan
 
+@inject ICategoryStore categoryStore
+
 <MudAppBar Style="height=200px" Elevation="1">
-        <MudText Typo="Typo.h5" Class="ml-3">Blazor Shop</MudText>
-        <MudSpacer />
-        <MudButton Variant="Variant.Text" OnClick="() => GoToHome()" StartIcon="@Icons.Material.Filled.Home" Color="Color.Inherit" Size="Size.Large">Home</MudButton>
-        <MudSpacer />
-        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Movie" Color="Color.Inherit" Size="Size.Large">Movies</MudButton>
+    <MudText Typo="Typo.h5" Class="ml-3">Blazor Shop</MudText>
+    <MudSpacer />
+    <MudButton Variant="Variant.Text" OnClick="() => GoToHome()" StartIcon="@Icons.Material.Filled.Home" Color="Color.Inherit" Size="Size.Large">Home</MudButton>
+    <MudSpacer />
+    @if (categoryStore.Categories != null)
+    {
+        @foreach (var category in categoryStore.Categories)
+        {
+            <MudButton Variant="Variant.Text" OnClick="() => CategoryClick(category.Url)" StartIcon="@SetIcon(category.Name)" Color="Color.Inherit" Size="Size.Large">@category.Name</MudButton>
+        }
+    }
 
-        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Book" Color="Color.Inherit" Size="Size.Large">Books</MudButton>
 
-        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.VideogameAsset" Color="Color.Inherit" Size="Size.Large">Video Games</MudButton>
-        <MudSpacer />
-        <SearchBar />
-        <MudSpacer />
-        <CartCounter />
-        <UserButton />
-        <MudSpacer />
-        
+
+
+    @*<MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Book" Color="Color.Inherit" Size="Size.Large">Books</MudButton>
+
+    <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.VideogameAsset" Color="Color.Inherit" Size="Size.Large">Video Games</MudButton>*@
+    <MudSpacer />
+    <SearchBar />
+    <MudSpacer />
+    <CartCounter />
+    <UserButton />
+    <MudSpacer />
+
 </MudAppBar>
 
 @code {
@@ -29,8 +40,27 @@
         navMan.NavigateTo("");
     }
 
+    private void CategoryClick(string url)
+    {
+        navMan.NavigateTo(url);
+    }
+
+    private string SetIcon(string name)
+    {
+        switch (name)
+        {
+            case "Movies":
+                return Icons.Material.Filled.Movie; break;
+            case "Books":
+                return Icons.Material.Filled.Book; break;
+            case "Video Games":
+                return Icons.Material.Filled.VideogameAsset; break;
+        }
+        return "";
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        //await categoryService.GetCategories();
+        await categoryStore.GetCategories();
     }
 }
