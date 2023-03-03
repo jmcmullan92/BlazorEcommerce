@@ -5,6 +5,7 @@
 @inject ILocalStorageService localStorage
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject NavigationManager navMan
+@inject ICartStore cartStore
 
 <PageTitle>Login</PageTitle>
 
@@ -81,6 +82,12 @@
 
             await localStorage.SetItemAsync("authToken", result.Data);
             await authenticationStateProvider.GetAuthenticationStateAsync();
+
+            //stores current items in cart in db and empties local cart storage
+            await cartStore.StoreCartItems(true);
+
+            await cartStore.GetCartItemsCount();
+
             navMan.NavigateTo(returnUrl);
         }
         else
