@@ -13,5 +13,7 @@ namespace BlazorEcommerce.Server.Services.Interfaces
 
         Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword);
 
+        int GetUserId();
+
     }
 }

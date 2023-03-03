@@ -25,6 +25,7 @@ namespace BlazorEcommerce.Client
             builder.Services.AddScoped<ICategoryStore, CategoryStore>();
             builder.Services.AddScoped<ICartStore, CartStore>();
             builder.Services.AddScoped<IAuthStore, AuthStore>();
+            builder.Services.AddScoped<IOrderStore, OrderStore>();
 
             builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();

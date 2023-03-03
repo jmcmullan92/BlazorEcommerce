@@ -3,12 +3,17 @@
 @using BlazorEcommerce.Client.Shared.Components.Common
 
 @inject ICartStore cartStore
+@inject IOrderStore orderStore
 
 <PageTitle>Shopping Cart</PageTitle>
 
 @if(cartProducts == null || cartProducts.Count == 0)
 {
     <LoadingSpinner Text="@message"/>
+}
+else if (orderPlaced)
+{
+    <span>Thank you for your order! You can check your orders <a href="orders">here</a></span>
 }
 else
 {
@@ -34,8 +39,9 @@ else
                                              Variant="Variant.Text"
                                              Min="1"
                                              Max="10"
-                                             T="int" Text="@product.Quantity.ToString()"
-                                             ValueChanged="@((value) => UpdateQuantity(value, product))" />
+                                             T="int"
+                                             Value="@product.Quantity"
+                                             ValueChanged="((val) => UpdateQuantity(val, product))" />
                                 </MudItem>
                                 <MudItem xs="2">
                                     <MudText Typo="Typo.h5">£@(product.Price * product.Quantity)</MudText>
@@ -75,10 +81,11 @@ else
                 <MudText Typo="Typo.h6">Total (@cartProducts.Count): £@cartProducts.Sum(product => product.Price * product.Quantity)</MudText>
             </MudItem>
             <MudItem xs="2">
-
+                <MudButton OnClick="() => PlaceOrder()" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.ShoppingCartCheckout" Color="Color.Primary">Place Order</MudButton>
             </MudItem>
         </MudGrid>
 
+        
 
     </div>
 }
@@ -87,9 +94,12 @@ else
 
     List<CartProductResponse> cartProducts = null;
     string message = "Loading cart...";
+    bool orderPlaced = false;
+
 
     protected override async Task OnInitializedAsync()
     {
+        orderPlaced = false;
         await LoadCart();
     }
 
@@ -103,27 +113,31 @@ else
 
     private async Task LoadCart()
     {
-        if ((await cartStore.GetCartItems()).Count == 0)
+        await cartStore.GetCartItemsCount();
+        cartProducts = await cartStore.GetCartProducts();
+
+        if (cartProducts == null || cartProducts.Count == 0)
         {
             message = "Cart is empty";
-            cartProducts = new List<CartProductResponse>();
-        }
-        else
-        {
-            cartProducts = await cartStore.GetCartProducts();
         }
     }
 
-    private async Task UpdateQuantity(int value, CartProductResponse product)
+    private async Task UpdateQuantity(int e, CartProductResponse product)
     {
-        product.Quantity = value;
-
-        if(product.Quantity < 1)
-        {
+        product.Quantity = e;
+        if (product.Quantity < 1)
             product.Quantity = 1;
-        }
 
         await cartStore.UpdateQuantity(product);
+    }
+
+    private async Task PlaceOrder()
+    {
+        await orderStore.PlaceOrder();
+
+        await cartStore.GetCartItemsCount();
+
+        orderPlaced = true;
     }
 
 }
