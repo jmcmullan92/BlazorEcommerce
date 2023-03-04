@@ -1,0 +1,83 @@
+﻿@page "/orders/{orderId:int}"
+
+@using BlazorEcommerce.Shared;
+@using BlazorEcommerce.Client.Shared.Components.Common
+
+@inject IOrderStore orderStore
+
+@if(order == null)
+{
+    <LoadingSpinner Text="Loading order..." />
+}
+else
+{
+    <MudText Typo="Typo.h4">Order from @order.OrderDate</MudText>
+
+    @foreach(var product in order.Products)
+    {
+        string linkHref = $"/product/{product.ProductId}";
+
+        <MudGrid>
+            <MudItem xs="3">
+
+            </MudItem>
+            <MudItem xs="6">
+                <MudCard Elevation="2" Style="display: flex; height: 200px; margin-top: 20px">
+                    <MudImage Src="@product.ImageUrl" Class="rounded-lg media-img" Alt="@product.Title" />
+                    <MudCardContent Style="flex: 1;padding-left: 15px;">
+                        <MudGrid>
+                            <MudItem xs="9">
+                                <MudLink Href="@linkHref">@product.Title</MudLink>
+                                <MudText Typo="Typo.subtitle1">@product.ProductType</MudText>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudText Typo="Typo.h5">£@product.TotalPrice</MudText>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="3">
+
+            </MudItem>
+        </MudGrid>
+    }
+
+    <MudGrid>
+        <MudItem xs="2">
+
+        </MudItem>
+        <MudItem xs="2">
+
+        </MudItem>
+        <MudItem xs="2">
+
+        </MudItem>
+        <MudItem xs="2">
+
+        </MudItem>
+        <MudItem xs="2">
+            <MudText Typo="Typo.h6">Total: £@order.TotalPrice</MudText>
+        </MudItem>
+        <MudItem xs="2">
+            
+        </MudItem>
+    </MudGrid>
+
+
+}
+
+
+@code {
+
+    [Parameter]
+    public int OrderId { get; set; }
+
+    OrderDetailsResponse order = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await orderStore.GetOrderDetails(OrderId);
+    }
+
+}

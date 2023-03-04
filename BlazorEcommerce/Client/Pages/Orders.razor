@@ -1,0 +1,60 @@
+﻿@page "/orders"
+@using BlazorEcommerce.Shared;
+@using BlazorEcommerce.Client.Shared.Components.Common
+
+@inject IOrderStore orderStore
+
+
+@if(orders == null)
+{
+    <LoadingSpinner Text="Finding your orders..." />
+}
+else if(orders.Count <= 0)
+{
+    <span>You have no orders yet...</span>
+}
+else
+{
+    foreach(var order in orders)
+    {
+        string linkHref = $"orders/{order.Id}";
+
+        <MudGrid>
+            <MudItem xs="3">
+
+            </MudItem>
+            <MudItem xs="6">
+                <MudCard Elevation="2" Style="display: flex; height: 200px; margin-top: 20px">
+                    <MudImage Src="@order.ProductImageUrl" Class="rounded-lg media-img" Alt="@order.Product" />
+                    <MudCardContent Style="flex: 1;padding-left: 15px;">
+                        <MudGrid>
+                            <MudItem xs="9">
+                                <MudText Typo="Typo.h4">@order.Product</MudText>
+                                <MudText Typo="Typo.subtitle1">@order.OrderDate</MudText>
+                                <MudLink Href="@linkHref">Show more...</MudLink>
+                            </MudItem>
+                            <MudItem xs="2">
+                                <MudText Typo="Typo.h5">£@order.TotalPrice</MudText>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="3">
+
+            </MudItem>
+        </MudGrid>
+    }
+}
+
+
+@code {
+
+    List<OrderOverviewResponse> orders = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await orderStore.GetOrders();
+    }
+
+}

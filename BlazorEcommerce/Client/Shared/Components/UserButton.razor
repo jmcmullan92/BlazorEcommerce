@@ -12,6 +12,7 @@
                 <AuthorizeView>
                     <Authorized>
                         <MudListItem Text="Profile" Icon="@Icons.Material.Filled.SpaceDashboard" OnClick="GoToUserProfile" />
+                        <MudListItem Text="Orders" Icon="@Icons.Material.Filled.Layers" OnClick="GoToOrders" />
                         <MudListItem Text="Log out" Icon="@Icons.Material.Filled.Logout" OnClick="Logout" />
                     </Authorized>
                     <NotAuthorized>
@@ -66,6 +67,11 @@
     private void GoToUserProfile()
     {
         navMan.NavigateTo("/userprofile");
+    }
+
+    private void GoToOrders()
+    {
+        navMan.NavigateTo("/orders");
     }
 
 

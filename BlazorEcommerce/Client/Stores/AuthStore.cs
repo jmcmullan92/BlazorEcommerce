@@ -8,10 +8,17 @@ namespace BlazorEcommerce.Client.Stores
     public class AuthStore : IAuthStore
     {
         private readonly HttpClient _http;
+        private readonly AuthenticationStateProvider _authStateProvider;
 
-        public AuthStore(HttpClient http)
+        public AuthStore(HttpClient http, AuthenticationStateProvider authStateProvider)
         {
             _http = http;
+            _authStateProvider = authStateProvider;
+        }
+
+        public async Task<bool> IsUserAuthenticated()
+        {
+            return (await _authStateProvider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated;
         }
 
         public async Task<ServiceResponse<bool>> ChangePassword(UserChangePassword request)
