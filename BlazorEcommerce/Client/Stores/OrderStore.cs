@@ -32,15 +32,29 @@ namespace BlazorEcommerce.Client.Stores
             return result.Data;
         }
 
-        public async Task PlaceOrder()
+        //public async Task PlaceOrder()
+        //{
+        //    if(await _authStore.IsUserAuthenticated())
+        //    {
+        //        await _http.PostAsync("api/order", null);
+        //    }
+        //    else
+        //    {
+        //        _navigationManager.NavigateTo("login");
+        //    }
+        //}
+
+        public async Task<string> PlaceOrder()
         {
-            if(await _authStore.IsUserAuthenticated())
+            if (await _authStore.IsUserAuthenticated())
             {
-                await _http.PostAsync("api/order", null);
+                var result = await _http.PostAsync("api/payment/checkout", null);
+
+                return await result.Content.ReadAsStringAsync();
             }
             else
             {
-                _navigationManager.NavigateTo("login");
+                return "login";
             }
         }
     }

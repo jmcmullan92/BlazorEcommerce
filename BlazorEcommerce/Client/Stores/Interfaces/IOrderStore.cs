@@ -4,7 +4,9 @@ namespace BlazorEcommerce.Client.Stores.Interfaces
 {
     public interface IOrderStore
     {
-        Task PlaceOrder();
+        //Task PlaceOrder();
+
+        Task<string> PlaceOrder();
 
         Task<List<OrderOverviewResponse>> GetOrders();
 

@@ -10,7 +10,7 @@ namespace BlazorEcommerce.Server.Services.Interfaces
 
         Task<ServiceResponse<int>> GetCartItemsCount();
 
-        Task<ServiceResponse<List<CartProductResponse>>> GetDbCartProducts();
+        Task<ServiceResponse<List<CartProductResponse>>> GetDbCartProducts(int? userId = null);
 
         Task<ServiceResponse<bool>> AddToCart(CartItem cartItem);
 
