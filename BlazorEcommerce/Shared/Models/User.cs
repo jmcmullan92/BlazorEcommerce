@@ -18,6 +18,8 @@ namespace BlazorEcommerce.Shared.Models
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
+        public Address Address { get; set; }
+
 
     }
 }

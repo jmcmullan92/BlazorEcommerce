@@ -1,5 +1,6 @@
 ﻿@page "/userprofile"
 @using BlazorEcommerce.Shared;
+@using BlazorEcommerce.Client.Shared.Components;
 
 @inject IAuthStore authStore
 
@@ -8,6 +9,11 @@
 <AuthorizeView>
     <h3>Hi! You're logged in as <i>@context.User.Identity.Name</i> </h3>
 </AuthorizeView>
+
+<h5>Delivery Address</h5>
+<AddressForm />
+<p></p>
+<br />
 
 <h5>Change Password</h5>
 <EditForm Model="request" OnValidSubmit="ChangePassword">

@@ -1,0 +1,145 @@
+﻿@inject IAddressStore addressStore
+
+<h3>AddressForm</h3>
+
+@if(address == null)
+{
+    <span>No address</span>
+    <MudButton OnClick="() => InitAddress()" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="ml-auto">Create Address</MudButton>
+}
+else
+{
+    <EditForm Model="address" OnValidSubmit="SubmitAddress">
+        <DataAnnotationsValidator />
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                <MudCard>
+                    <MudCardContent>
+                        <MudTextField id="txtFirstName"
+                                  Label="First name"
+                                  Class="mt-3"
+                                  Disabled="@formDisabled"
+                                  @bind-Value="address.FirstName"
+                                  For="@(() => address.FirstName)"
+                                  InputType="InputType.Text" />
+                        <MudTextField id="txtLastName"
+                                  Label="Last Name"
+                                  Class="mt-3"
+                                  Disabled="@formDisabled"
+                                  @bind-Value="address.LastName"
+                                  For="@(() => address.LastName)"
+                                  InputType="InputType.Text" />
+                        <MudTextField id="txtStreet"
+                                  Label="Street Address"
+                                  Class="mt-3"
+                                  Disabled="@formDisabled"
+                                  @bind-Value="address.Street"
+                                  For="@(() => address.Street)"
+                                  InputType="InputType.Text" />
+                        <MudTextField id="txtCity"
+                                  Label="City"
+                                  Class="mt-3"
+                                  Disabled="@formDisabled"
+                                  @bind-Value="address.City"
+                                  For="@(() => address.City)"
+                                  InputType="InputType.Text" />
+                        <MudTextField id="txtCounty"
+                                  Label="County"
+                                  Class="mt-3"
+                                  Disabled="@formDisabled"
+                                  @bind-Value="address.County"
+                                  For="@(() => address.County)"
+                                  InputType="InputType.Text" />
+                        <MudTextField id="txtPostCode"
+                                  Label="Post Code"
+                                  Class="mt-3"
+                                  Disabled="@formDisabled"
+                                  @bind-Value="address.PostCode"
+                                  For="@(() => address.PostCode)"
+                                  InputType="InputType.Text" />
+                        <MudTextField id="txtCountry"
+                                  Label="Country"
+                                  Class="mt-3"
+                                  Disabled="@formDisabled"
+                                  @bind-Value="address.Country"
+                                  For="@(() => address.Country)"
+                                  InputType="InputType.Text" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        @if (showErrorAlert)
+                        {
+                            <MudAlert Severity="Severity.Error"
+                              ShowCloseIcon="true"
+                              CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                        }
+                        @if (showSuccessAlert)
+                        {
+                            <MudAlert Severity="Severity.Success"
+                              ShowCloseIcon="true"
+                              CloseIconClicked="(() => CloseAlert(false))">@alertMessage</MudAlert>
+                        }
+                        @if (!showErrorAlert && !showSuccessAlert)
+                        {
+                            if (editAddress)
+                            {
+                                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton OnClick="() => EditAddress()" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" Class="ml-auto">Edit</MudButton>
+                            }
+
+                        }
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+
+    </EditForm>
+}
+
+
+
+@code {
+    Address address = null;
+
+    string formMode = "";
+
+    bool showSuccessAlert = false;
+    bool showErrorAlert = false;
+    bool editAddress = false;
+    bool formDisabled = true;
+    string alertMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        address = await addressStore.GetAddress();
+
+    }
+
+    private async Task SubmitAddress()
+    {
+        editAddress = false;
+        formDisabled = true;
+        address = await addressStore.AddOrUpdateAddress(address);
+    }
+
+    private void InitAddress()
+    {
+        address = new Address();
+        editAddress = true;
+        formDisabled = false;
+    }
+
+    private void EditAddress()
+    {
+        editAddress = true;
+        formDisabled = false;
+    }
+
+    private void CloseAlert(bool value)
+    {
+        showErrorAlert = value;
+        showSuccessAlert = value;
+    }
+}
