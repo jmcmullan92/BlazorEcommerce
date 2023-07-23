@@ -13,6 +13,8 @@
                     <Authorized>
                         <MudListItem Text="Profile" Icon="@Icons.Material.Filled.SpaceDashboard" OnClick="GoToUserProfile" />
                         <MudListItem Text="Orders" Icon="@Icons.Material.Filled.Layers" OnClick="GoToOrders" />
+                        <AdminMenu />
+                        <MudDivider />
                         <MudListItem Text="Log out" Icon="@Icons.Material.Filled.Logout" OnClick="Logout" />
                     </Authorized>
                     <NotAuthorized>

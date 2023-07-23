@@ -20,6 +20,8 @@ namespace BlazorEcommerce.Shared.Models
 
         public Address Address { get; set; }
 
+        public string Role { get; set; } = "Customer";
+
 
     }
 }

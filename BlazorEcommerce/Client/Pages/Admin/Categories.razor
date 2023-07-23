@@ -1,0 +1,201 @@
+﻿@page "/admin/categories"
+@attribute [Authorize(Roles = "Admin")]
+
+@inject ICategoryStore categoryStore
+@implements IDisposable
+
+
+<h3>Categories</h3>
+
+@if(categoryStore.AdminCategories == null)
+{
+    <BlazorEcommerce.Client.Shared.Components.Common.LoadingSpinner />
+}
+else
+{
+
+    <MudGrid>
+        <MudItem xs="6">
+            <MudSimpleTable Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        @foreach (var h in headings)
+                        {
+                            <th>@h</th>
+                        }
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in categoryStore.AdminCategories)
+                    {
+                        <tr>
+                            <MudTd contenteditable="true">@category.Name</MudTd>
+                            <td>@category.Url</td>
+                            <td><MudCheckBox @bind-Checked="@category.Visible"></MudCheckBox></td>
+                            <td><MudCheckBox @bind-Checked="@category.IsDeleted"></MudCheckBox></td>
+
+                            <td><MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" /></td>
+                            <td><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" /></td>
+                        </tr>
+
+                    }
+                </tbody>
+            </MudSimpleTable>
+        </MudItem>
+
+        <MudItem xs="6">
+            <MudSimpleTable Style="overflow-x: auto;">
+                <thead>
+                    <tr>
+                        @foreach (var h in headings)
+                        {
+                            <th>@h</th>
+                        }
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in categoryStore.AdminCategories)
+                    {
+
+                        @if(category.Editing)
+                        {
+                            <EditForm Model="editingCategory" OnSubmit="UpdateCategory">
+                                <MudTr>
+                                    <MudTd>
+                                        <MudTextField Class="mt-3"
+                                                      Disabled="false"
+                                                      @bind-Value="category.Name"
+                                                      For="@(() => category.Name)"
+                                                      InputType="InputType.Text" /> 
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudTextField Class="mt-3"
+                                                      Disabled="false"
+                                                      @bind-Value="category.Url"
+                                                      For="@(() => category.Name)"
+                                                      InputType="InputType.Text" />
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudCheckBox Disabled="false"
+                                                     @bind-Checked="category.Visible"
+                                                      For="@(() => category.Visible)"/>
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudCheckBox Disabled="false"
+                                        @bind-Checked="category.IsDeleted"
+                                                     For="@(() => category.IsDeleted)" />
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudIconButton 
+                                            Icon="@Icons.Material.Filled.Upload" 
+                                            Variant="Variant.Filled" 
+                                            Color="Color.Primary" 
+                                            Size="Size.Small"
+                                            />
+                                    </MudTd>
+                                    <MudTd>
+                                        <MudIconButton 
+                                            Icon="@Icons.Material.Filled.Cancel" 
+                                            Variant="Variant.Filled" 
+                                            Color="Color.Error" 
+                                            Size="Size.Small" 
+                                            OnClick="CancelEditing" />
+                                    </MudTd>
+                                </MudTr>
+                            </EditForm>
+                        }
+                        else
+                        {
+                            <tr>
+                                <MudTd>@category.Id</MudTd>
+                                <MudTd>@category.Name</MudTd>
+                                <td>@category.Url</td>
+                                <td><MudCheckBox @bind-Checked="@category.Visible" Disabled="true"></MudCheckBox></td>
+                                <td><MudCheckBox @bind-Checked="@category.IsDeleted" Disabled="true"></MudCheckBox></td>
+
+                                <td><MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" @onclick="() => EditCategory(category)" /></td>
+                                <td><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" /></td>
+                            </tr>
+                            
+                        }
+                        
+
+                    }
+                </tbody>
+            </MudSimpleTable>
+        </MudItem>
+       
+        
+    </MudGrid>
+
+
+    
+}
+
+
+
+
+@code {
+
+    string[] headings = {"Name", "Url", "Visible", "IsDeleted" };
+
+    Category editingCategory = null;
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await categoryStore.GetAdminCategories();
+        categoryStore.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        categoryStore.OnChange += StateHasChanged;
+    }
+
+    private void CreateNewCategory()
+    {
+        editingCategory = categoryStore.CreateNewCategory();
+
+    }
+
+    private void EditCategory(Category category)
+    {
+        category.Editing = true;
+        editingCategory = category;
+    }
+
+    private async Task UpdateCategory()
+    {
+        if(editingCategory.IsNew)
+        {
+            await categoryStore.AddCategory(editingCategory);
+        }
+        else
+        {
+            await categoryStore.UpdateCategory(editingCategory);
+        }
+
+        editingCategory = new Category();
+    }
+
+    private async Task CancelEditing()
+    {
+        editingCategory = new Category();
+
+        await categoryStore.GetAdminCategories();
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        await categoryStore.DeleteCategory(id);
+
+    }
+
+}
